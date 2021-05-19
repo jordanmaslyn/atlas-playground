@@ -6,10 +6,10 @@ import {
   getApolloClient,
 } from '@wpengine/headless';
 import { gql } from '@apollo/client';
-import { CTA, Footer, Header, Hero } from '../components';
+import { CTA, Footer, Header, Hero } from '../../components';
+import { POST_DATA_FRAGMENT } from '@wpengine/headless/dist/api/queries';
 
-export default function Single(): JSX.Element {
-  const post = usePost();
+export default function BlogPost({ post }): JSX.Element {
   const settings = useGeneralSettings();
 
   return (
@@ -46,31 +46,28 @@ export default function Single(): JSX.Element {
   );
 }
 
-async function getProps(
+export async function getStaticProps(
   context: GetStaticPropsContext | GetServerSidePropsContext,
 ) {
   const apollo = getApolloClient(context);
-  await apollo.query({
+
+  const post = await apollo.query({
     query: gql`
-    {
-      menus {
-        edges {
-          node {
-            menuItems {
-              edges {
-                node {
-                  url
-                  title
-                  label
-                }
-              }
-            }
-          }
+      ${gql`${POST_DATA_FRAGMENT}`}
+      {
+        postBy(slug: "${(context.params as {slug: string}).slug}") {
+          ...postData
         }
       }
-    }
-  `});
+    `
+  })
+
+  return { props: { post: post.data.postBy } }
 }
 
-export const getStaticProps = getProps;
-export const getServerSideProps = getProps;
+export async function getStaticPaths() {
+  return {
+    paths: [],
+    fallback: 'blocking'
+  };
+}

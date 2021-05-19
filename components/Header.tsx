@@ -17,7 +17,7 @@ function Header({
   const menuItems = [
     { title: 'Home', href: '/' },
     { title: 'About', href: '/about' },
-    { title: 'Posts', href: '/category/uncategorized' },
+    { title: 'Posts', href: '/blog/' },
     {
       title: 'GitHub',
       href: 'https://github.com/wpengine/headless-framework',

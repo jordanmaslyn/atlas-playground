@@ -1,9 +1,12 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { usePosts, useGeneralSettings } from '@wpengine/headless/react';
 import { GetStaticPropsContext } from 'next';
 import { getApolloClient, getPosts } from '@wpengine/headless';
 import { CTA, Header, Footer, Hero, Posts } from '../components';
 import styles from '../scss/wp-templates/front-page.module.scss';
+import { ProductsRepository, repository as productsRepository } from 'features/products/repository';
+import { Product } from 'shopify-buy';
+import { getNextStaticProps } from '@wpengine/headless/next';
 
 /**
  * Example of post variables to query the first six posts in a named category.
@@ -16,9 +19,10 @@ const firstSixInCategory = {
   },
 };
 
-export default function FrontPage(props: any): JSX.Element {
+export default function FrontPage({ products }): JSX.Element {
   const posts = usePosts(firstSixInCategory);
   const settings = useGeneralSettings();
+  console.log(products)
 
   return (
     <>
@@ -126,6 +130,14 @@ export default function FrontPage(props: any): JSX.Element {
           postTitleLevel="h3"
           id={styles.post_list}
         />
+        <div>
+          {products.map((product) => (
+            <div>
+              <h3>{product.title}</h3>
+              <div dangerouslySetInnerHTML={{__html: product.descriptionHtml}}></div>
+            </div>
+          ))}
+        </div>
         <CTA
           title="Questions or comments?"
           buttonText="Join the discussion on GitHub"
@@ -156,4 +168,10 @@ export default function FrontPage(props: any): JSX.Element {
 export async function getStaticProps(context: GetStaticPropsContext) {
   const client = getApolloClient(context);
   await getPosts(client, firstSixInCategory);
+
+  return {
+    props: {
+      products: await productsRepository.init().getAll()
+    }
+  }
 }

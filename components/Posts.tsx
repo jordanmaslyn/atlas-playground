@@ -41,7 +41,7 @@ function Posts({
                 id={`post-${post.id}`}>
                 <div>
                   <Heading level={postTitleLevel} className={styles.title}>
-                    <Link href={post.uri}>
+                    <Link href={`/blog/${encodeURIComponent(post.slug as string)}`}>
                       <a>{post.title}</a>
                     </Link>
                   </Heading>
@@ -50,7 +50,7 @@ function Posts({
                     // eslint-disable-next-line react/no-danger
                     dangerouslySetInnerHTML={{ __html: post.excerpt ?? '' }}
                   />
-                  <Link href={post.uri}>
+                  <Link href={`/blog/${encodeURIComponent(post.slug as string)}`}>
                     <a
                       aria-label={`Read more about ${
                         post.title || 'the post'
