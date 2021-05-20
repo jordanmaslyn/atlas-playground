@@ -19,7 +19,7 @@ const firstSixInCategory = {
   },
 };
 
-export default function FrontPage({ products }): JSX.Element {
+export default function FrontPage({ products }: { products: Product[] }): JSX.Element {
   const posts = usePosts(firstSixInCategory);
   const settings = useGeneralSettings();
   console.log(products)
@@ -134,7 +134,7 @@ export default function FrontPage({ products }): JSX.Element {
           {products.map((product) => (
             <div>
               <h3>{product.title}</h3>
-              <div dangerouslySetInnerHTML={{__html: product.descriptionHtml}}></div>
+              <div dangerouslySetInnerHTML={{__html: (product as any).descriptionHtml}}></div>
             </div>
           ))}
         </div>

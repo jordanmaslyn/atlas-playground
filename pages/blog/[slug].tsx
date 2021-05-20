@@ -9,7 +9,7 @@ import { gql } from '@apollo/client';
 import { CTA, Footer, Header, Hero } from '../../components';
 import { POST_DATA_FRAGMENT } from '@wpengine/headless/dist/api/queries';
 
-export default function BlogPost({ post }): JSX.Element {
+export default function BlogPost({ post }: { post: any }): JSX.Element {
   const settings = useGeneralSettings();
 
   return (
